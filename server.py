@@ -1,15 +1,16 @@
-import http.server
-import socketserver
+import os
+from http.server import SimpleHTTPRequestHandler
+from socketserver import TCPServer
 
+# Set the working directory to the folder containing the generated HTML
+os.chdir('generated')  # Make sure to navigate to the folder where the generated HTML is saved
+
+# Define the port (8000 is commonly used)
 PORT = 8000
-DIRECTORY = "generated"
 
+# Create the server and bind it to the port
+Handler = SimpleHTTPRequestHandler
+httpd = TCPServer(("", PORT), Handler)
 
-class Handler(http.server.SimpleHTTPRequestHandler):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, directory=DIRECTORY, **kwargs)
-
-
-with socketserver.TCPServer(("", PORT), Handler) as httpd:
-    print(f"Serving at http://localhost:{PORT}")
-    httpd.serve_forever()
+print(f"Serving at port {PORT}")
+httpd.serve_forever()
