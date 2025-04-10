@@ -5,7 +5,7 @@ import datetime
 
 def push_generated_html():
     os.chdir(os.path.dirname(__file__))  # Ensure working directory
-    subprocess.run(["git", "add", "generated/index.html"])
+    subprocess.run(["git", "add", "generated/generated_website16.html"])
     commit_msg = f"Auto update: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
     subprocess.run(["git", "commit", "-m", commit_msg])
     subprocess.run(["git", "push"])
