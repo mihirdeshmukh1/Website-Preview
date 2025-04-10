@@ -4,7 +4,7 @@ from ultralytics import YOLO
 from detectWebsite import build_website_from_detections
 
 images_dir = os.path.join('.', 'test_images')
-image_name = '158.png'
+image_name = '162.png'
 image_path = os.path.join(images_dir, image_name)
 
 model_path = os.path.join('.', 'runs', 'detect',
