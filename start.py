@@ -13,7 +13,7 @@ def start_monitoring():
 
 
 # Path settings
-images_dir = os.path.join('.', 'test_images')
+images_dir = os.path.join('.', 'test_images1')
 image_name = '158.png'
 image_path = os.path.join(images_dir, image_name)
 
