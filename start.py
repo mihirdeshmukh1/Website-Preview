@@ -1,10 +1,20 @@
 import os
 import cv2
+import subprocess
+import threading
 from ultralytics import YOLO
 from detectWebsite import build_website_from_detections
 
-images_dir = os.path.join('.', 'test_images1')
-image_name = '162.png'
+# Start the file monitoring in a separate thread
+
+
+def start_monitoring():
+    subprocess.Popen(['python', 'auto_commit.py'])
+
+
+# Path settings
+images_dir = os.path.join('.', 'test_images')
+image_name = '158.png'
 image_path = os.path.join(images_dir, image_name)
 
 model_path = os.path.join('.', 'runs', 'detect',
@@ -21,109 +31,43 @@ def detect_component(image_path):
 
     return detection_results, height, width
 
-def generate_index_html():
-    index_html = """
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Website Preview and Code</title>
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-      <style>
-        body {
-          font-family: Arial, sans-serif;
-          padding: 20px;
-        }
-        #previewSection, #codeSection {
-          display: none;
-        }
-        .active {
-          display: block;
-        }
-      </style>
-    </head>
-    <body>
-
-      <div class="container">
-        <h1>AI Generated Website</h1>
-        <div class="btn-group mb-4" role="group" aria-label="Toggle Preview and Code">
-          <button type="button" class="btn btn-primary" id="showCodeBtn">Show Code</button>
-          <button type="button" class="btn btn-primary" id="showPreviewBtn">Show Preview</button>
-        </div>
-
-        <!-- Code Section -->
-        <div id="codeSection" class="active">
-          <h3>Generated HTML Code</h3>
-          <pre id="codeOutput"></pre>
-        </div>
-
-        <!-- Preview Section -->
-        <div id="previewSection">
-          <h3>Preview</h3>
-          <iframe src="generated_website16.html" width="100%" height="600px"></iframe>
-        </div>
-      </div>
-
-      <script>
-        // Handle button clicks to toggle between code and preview
-        const showCodeBtn = document.getElementById('showCodeBtn');
-        const showPreviewBtn = document.getElementById('showPreviewBtn');
-        const codeSection = document.getElementById('codeSection');
-        const previewSection = document.getElementById('previewSection');
-        const codeOutput = document.getElementById('codeOutput');
-
-        // Load the generated HTML code into the code section
-        fetch('generated_website16.html')
-          .then(response => response.text())
-          .then(data => {
-            codeOutput.textContent = data;  // Show the HTML code in the code section
-          });
-
-        showCodeBtn.addEventListener('click', () => {
-          codeSection.classList.add('active');
-          previewSection.classList.remove('active');
-        });
-
-        showPreviewBtn.addEventListener('click', () => {
-          previewSection.classList.add('active');
-          codeSection.classList.remove('active');
-        });
-      </script>
-
-    </body>
-    </html>
-    """
-    
-    # Write the content to the index.html file inside the 'generated' folder
-    with open('generated/index.html', 'w') as file:
-        file.write(index_html)
-    print("index.html has been generated successfully!")
-
-
 
 def main():
+    # Start the file monitoring thread
+    monitor_thread = threading.Thread(target=start_monitoring)
+    # This ensures the thread will exit when the main program exits
+    monitor_thread.daemon = True
+    monitor_thread.start()
+
+    # Run the detection and website generation
     detections, v_height, v_width = detect_component(image_path)
     html = build_website_from_detections(detections, v_width, v_height)
 
-    # Specify the 'generated/' folder path
-    generated_folder = os.path.join('.', 'generated')
-    # Create the folder if it doesn't exist
-    if not os.path.exists(generated_folder):
-        os.makedirs(generated_folder)
-
-    # Save the HTML file inside the 'generated/' folder
-    html_file_path = os.path.join(generated_folder, "generated_website16.html")
-    with open(html_file_path, "w") as f:
+    with open("generated_website16.html", "w") as f:
         f.write(html)
 
+    print("Website generated successfully!")
+    print("Changes will be automatically committed and pushed to the repository.")
 
-    generate_index_html()
+    # Keep the program running to allow monitoring
+    try:
+        while True:
+            user_input = input(
+                "Press Enter to exit or type 'run' to regenerate the website: ").strip()
+            if not user_input:
+                break
+            if user_input.lower() == 'run':
+                detections, v_height, v_width = detect_component(image_path)
+                html = build_website_from_detections(
+                    detections, v_width, v_height)
 
-    print(f"Website generated successfully and saved to {html_file_path}")
+                with open("generated_website16.html", "w") as f:
+                    f.write(html)
+
+                print("Website regenerated successfully!")
+    except KeyboardInterrupt:
+        print("\nExiting...")
 
 
-
-
-main()
+if __name__ == "__main__":
+    main()
