@@ -2,7 +2,7 @@ import http.server
 import socketserver
 
 PORT = 8000
-DIRECTORY = "generated"
+DIRECTORY = "preview-site"
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
