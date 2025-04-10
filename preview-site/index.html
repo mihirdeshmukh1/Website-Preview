@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated Website Preview</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .tab-buttons {
+            margin-bottom: 1rem;
+        }
+
+        .code-section,
+        .preview-section {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        iframe {
+            width: 100%;
+            height: 90vh;
+            border: none;
+        }
+
+        pre {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            height: 90vh;
+            overflow-y: scroll;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-4">
+        <div class="tab-buttons d-flex gap-2">
+            <button id="showCode" class="btn btn-outline-primary">Code</button>
+            <button id="showPreview" class="btn btn-outline-success">Preview</button>
+        </div>
+
+        <div id="codeSection" class="code-section active">
+            <pre id="codeDisplay">Loading code...</pre>
+        </div>
+
+        <div id="previewSection" class="preview-section">
+            <iframe id="previewIframe" src="https://USERNAME-8000.preview.app.github.dev/"></iframe>
+        </div>
+    </div>
+
+    <script>
+        const codeBtn = document.getElementById('showCode');
+        const previewBtn = document.getElementById('showPreview');
+        const codeSection = document.getElementById('codeSection');
+        const previewSection = document.getElementById('previewSection');
+
+        codeBtn.onclick = () => {
+            codeSection.classList.add('active');
+            previewSection.classList.remove('active');
+        };
+
+        previewBtn.onclick = () => {
+            previewSection.classList.add('active');
+            codeSection.classList.remove('active');
+        };
+
+        // Load code from a local or remote source (e.g. from API or static file)
+        fetch('./generated/index.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('codeDisplay').textContent = html;
+            });
+    </script>
+</body>
+
+</html>
