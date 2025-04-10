@@ -23,15 +23,21 @@ def detect_component(image_path):
 
 
 def main():
-
     detections, v_height, v_width = detect_component(image_path)
-
     html = build_website_from_detections(detections, v_width, v_height)
 
-    with open("generated_website16.html", "w") as f:
+    # Specify the 'generated/' folder path
+    generated_folder = os.path.join('.', 'generated')
+    # Create the folder if it doesn't exist
+    if not os.path.exists(generated_folder):
+        os.makedirs(generated_folder)
+
+    # Save the HTML file inside the 'generated/' folder
+    html_file_path = os.path.join(generated_folder, "generated_website16.html")
+    with open(html_file_path, "w") as f:
         f.write(html)
 
-    print("Website generated successfully!")
+    print(f"Website generated successfully and saved to {html_file_path}")
 
 
 main()
