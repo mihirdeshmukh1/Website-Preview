@@ -11,7 +11,7 @@ def start_monitoring():
 
 
 images_dir = os.path.join('.', 'test_images1')
-image_name = '158.png'
+image_name = '55.png'
 image_path = os.path.join(images_dir, image_name)
 
 model_path = os.path.join('.', 'runs', 'detect',
