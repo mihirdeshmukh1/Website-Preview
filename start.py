@@ -5,14 +5,11 @@ import threading
 from ultralytics import YOLO
 from detectWebsite import build_website_from_detections
 
-# Start the file monitoring in a separate thread
-
 
 def start_monitoring():
     subprocess.Popen(['python', 'auto_commit.py'])
 
 
-# Path settings
 images_dir = os.path.join('.', 'test_images1')
 image_name = '162.png'
 image_path = os.path.join(images_dir, image_name)
@@ -33,13 +30,10 @@ def detect_component(image_path):
 
 
 def main():
-    # Start the file monitoring thread
     monitor_thread = threading.Thread(target=start_monitoring)
-    # This ensures the thread will exit when the main program exits
     monitor_thread.daemon = True
     monitor_thread.start()
 
-    # Run the detection and website generation
     detections, v_height, v_width = detect_component(image_path)
     html = build_website_from_detections(detections, v_width, v_height)
 
@@ -49,7 +43,6 @@ def main():
     print("Website generated successfully!")
     print("Changes will be automatically committed and pushed to the repository.")
 
-    # Keep the program running to allow monitoring
     try:
         while True:
             user_input = input(

@@ -15,7 +15,6 @@ def pull_updates():
 
 
 def main():
-    # Pull interval in seconds
     interval = 30
 
     print(

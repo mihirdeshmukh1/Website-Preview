@@ -16,12 +16,10 @@ def start_sync_service():
 
 
 def main():
-    # Start web server in a thread
     server_thread = threading.Thread(target=start_web_server)
     server_thread.daemon = True
     server_thread.start()
 
-    # Start sync service in the main thread
     start_sync_service()
 
 
