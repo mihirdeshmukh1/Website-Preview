@@ -4,7 +4,6 @@ import os
 
 
 def pull_updates():
-    """Pull updates from remote repository"""
     try:
         print("Pulling latest changes from repository...")
         subprocess.run(['git', 'pull'], check=True)
